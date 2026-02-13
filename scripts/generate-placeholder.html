@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生成占位图片</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .controls {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #666;
+      font-weight: 500;
+    }
+    input, button {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    input {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-weight: 600;
+    }
+    button:hover {
+      background: #5568d3;
+    }
+    canvas {
+      display: none;
+    }
+    .preview {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .preview img {
+      max-width: 100%;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .info {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f0f7ff;
+      border-left: 4px solid #667eea;
+      border-radius: 4px;
+      color: #333;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🖼️ 生成占位图片</h1>
+    
+    <div class="controls">
+      <label>文件名</label>
+      <input type="text" id="filename" value="placeholder-1.webp" placeholder="例如: placeholder-1.webp">
+      
+      <label>宽度 (px)</label>
+      <input type="number" id="width" value="800" min="100" max="4000">
+      
+      <label>高度 (px)</label>
+      <input type="number" id="height" value="600" min="100" max="4000">
+      
+      <label>文字</label>
+      <input type="text" id="text" value="Placeholder" placeholder="占位文字">
+      
+      <button onclick="generateImage()">生成并下载</button>
+    </div>
+    
+    <div class="preview" id="preview"></div>
+    
+    <div class="info">
+      <strong>使用说明：</strong><br>
+      1. 设置图片参数<br>
+      2. 点击"生成并下载"按钮<br>
+      3. 将下载的图片放到 <code>src/photos/</code> 目录<br>
+      4. 在 <code>src/config/photoStories.ts</code> 中配置故事
+    </div>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    function generateImage() {
+      const filename = document.getElementById('filename').value || 'placeholder.webp';
+      const width = parseInt(document.getElementById('width').value) || 800;
+      const height = parseInt(document.getElementById('height').value) || 600;
+      const text = document.getElementById('text').value || 'Placeholder';
+      
+      const canvas = document.getElementById('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      
+      // 渐变背景
+      const gradient = ctx.createLinearGradient(0, 0, width, height);
+      gradient.addColorStop(0, '#667eea');
+      gradient.addColorStop(0.5, '#764ba2');
+      gradient.addColorStop(1, '#f093fb');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
+      
+      // 添加半透明图案
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+      for (let i = 0; i < 20; i++) {
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+        const size = Math.random() * 100 + 50;
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      // 添加文字
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.font = `bold ${Math.min(width, height) / 10}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, width / 2, height / 2);
+      
+      // 添加尺寸信息
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.font = `${Math.min(width, height) / 30}px Arial`;
+      ctx.fillText(`${width} × ${height}`, width / 2, height / 2 + Math.min(width, height) / 8);
+      
+      // 转换为 WebP 并下载
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        
+        // 显示预览
+        const preview = document.getElementById('preview');
+        preview.innerHTML = `
+          <img src="${url}" alt="Preview">
+          <p style="margin-top: 10px; color: #666;">
+            <strong>${filename}</strong> (${width} × ${height})
+          </p>
+        `;
+        
+        // 下载
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }, 'image/webp', 0.8);
+    }
+    
+    // 页面加载时生成预览
+    window.addEventListener('load', () => {
+      generateImage();
+    });
+  </script>
+</body>
+</html>

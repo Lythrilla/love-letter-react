@@ -1,0 +1,29 @@
+[package]
+name = "love-letter-to-X"
+version = "1.0.0"
+description = "写给X的信"
+authors = ["you"]
+license = ""
+repository = ""
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.5.3", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "2.9.4", features = [] }
+
+# 优化 release 构建
+[profile.release]
+panic = "abort"      # 移除 panic 展开代码
+codegen-units = 1    # 单编译单元，最优化
+lto = true           # 完整链接优化
+opt-level = "s"      # 体积优化（避免 z 导致的 ICE）
+strip = true         # 移除符号表

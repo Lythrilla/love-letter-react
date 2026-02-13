@@ -1,0 +1,581 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Ma Shan Zheng';
+  src: url('./assets/MaShanZheng-Subset.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg-dark: #050510;
+  --text-main: #e0e0e0;
+  --glass-surface: rgba(15, 15, 25, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --accent-gold: #ffd700;
+  --accent-pink: #ff6b9d;
+  --accent-glow: rgba(255, 107, 157, 0.25);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input, textarea {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Noto Serif SC', serif;
+  overflow: hidden;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.intro-text {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.2rem, 5vw, 2rem);
+  letter-spacing: 0.4em;
+  text-align: center;
+  color: transparent;
+  background: linear-gradient(to bottom, #fff 30%, #aaa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 0 0 40px rgba(255,255,255,0.3);
+  padding: 0 1rem;
+  width: 100%;
+  font-weight: 300;
+  animation: text-shimmer 3s ease-in-out infinite alternate;
+}
+
+@keyframes text-shimmer {
+  from { text-shadow: 0 0 20px rgba(255,255,255,0.2); opacity: 0.8; }
+  to { text-shadow: 0 0 40px rgba(255,255,255,0.6); opacity: 1; }
+}
+
+.enter-btn {
+  position: fixed;
+  bottom: 15vh;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 18px 50px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.4em;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+  border-radius: 2px;
+}
+
+.enter-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s;
+}
+
+.enter-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+  letter-spacing: 0.5em;
+}
+
+.enter-btn:hover::before {
+  left: 100%;
+}
+
+.letter-container {
+  position: fixed;
+  right: -55%;
+  top: 0;
+  width: 55%;
+  height: 100%;
+  z-index: 30;
+  
+  background: linear-gradient(135deg, rgba(10, 10, 18, 0.6), rgba(20, 20, 30, 0.75));
+  
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: -20px 0 80px rgba(0, 0, 0, 0.8), inset 1px 0 0 rgba(255,255,255,0.05);
+  
+  transition: right 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.letter-container.open {
+  right: 0;
+}
+
+.close-btn {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.03);
+  border-radius: 50%;
+  color: rgba(255,255,255,0.8);
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease;
+  z-index: 40;
+}
+.close-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: #fff;
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 80px 10% 120px 10%;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+.scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+.scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+
+.paper-content {
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.paper-content .tag {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.paper-content h1 {
+  font-family: "Noto Serif SC", serif;
+  font-size: clamp(1.6rem, 4vw, 2rem);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.06em;
+  font-weight: 400;
+}
+
+.paper-content h2 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 2rem 0 1rem;
+  letter-spacing: 0.08em;
+  font-weight: 400;
+}
+
+.paper-content p {
+  font-family: "Noto Serif SC", serif;
+  font-size: 1rem;
+  line-height: 2;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.2rem;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+
+.paper-content .highlight {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  font-size: 1.05rem;
+  padding: 0.8rem 0;
+  line-height: 1.9;
+  text-align: center;
+}
+
+.divider {
+  width: 30px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 2rem auto;
+}
+
+.paper-content .quote {
+  font-family: "Noto Serif SC", serif;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-style: normal;
+  margin: 1.5rem 0;
+  padding: 0.8rem 1.2rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  line-height: 1.9;
+}
+
+.paper-content .final-quote {
+  border: none;
+  padding: 1rem 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 400;
+  text-align: center;
+  letter-spacing: 0.06em;
+}
+
+.paper-content .final-confession {
+  text-align: center;
+  font-size: 1.15rem;
+  background: linear-gradient(180deg, #fff 20%, #d4a5ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  line-height: 2.2;
+  margin: 2.5rem 0;
+  padding: 1.5rem 0;
+  transition: all 0.8s ease;
+}
+
+.paper-content .final-confession.glowing {
+  text-shadow: 0 0 30px rgba(255, 182, 193, 0.6), 0 0 60px rgba(255, 182, 193, 0.3);
+  filter: brightness(1.2);
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.paper-content .mect-date {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.2em;
+  text-align: center;
+  margin: 2rem 0 1.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.signature {
+  margin: 2.5rem 0 1.5rem;
+  text-align: center;
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.signature-title {
+  font-family: "Noto Serif SC", serif;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.08em;
+}
+.signature-sub {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.12em;
+}
+
+.memory-list {
+  margin: 1.5rem 0;
+}
+.memory-list p {
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  position: relative;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.memory-list p:last-child {
+  margin-bottom: 0;
+}
+.memory-list p::before {
+  content: '–';
+  position: absolute;
+  left: 0;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.todo-intro {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.todo-outro {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.todo-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 1rem 0;
+}
+
+.todo-item.highlight-item {
+  background: rgba(255, 180, 100, 0.08);
+  border-color: rgba(255, 180, 100, 0.25);
+  color: rgba(255, 200, 130, 0.85);
+}
+
+.music-btn {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(10, 10, 20, 0.6);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  transition: all 0.3s;
+}
+.music-btn:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.6);
+  transform: scale(1.1);
+  box-shadow: 0 0 30px rgba(255,255,255,0.2);
+}
+.music-wave {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.4);
+  opacity: 0;
+  pointer-events: none;
+}
+.music-wave.playing {
+  animation: music-ripple 2s ease-out infinite;
+}
+
+@keyframes music-ripple {
+  0% { transform: scale(1); opacity: 0.6; border-width: 1px; }
+  100% { transform: scale(2.5); opacity: 0; border-width: 0px; }
+}
+
+@media (max-width: 768px) {
+  .letter-container {
+    width: 100%;
+    border-left: none;
+    background: rgba(10, 10, 18, 0.9);
+  }
+  .paper-content h1 {
+    font-size: 1.8rem;
+  }
+  .paper-content p {
+    font-size: 0.95rem;
+  }
+}
+
+.todo-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s;
+}
+.todo-item.done {
+  border-color: rgba(255, 150, 180, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 150, 180, 0.08);
+}
+
+.global-copyright {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font-size: 9px;
+  opacity: 0.3;
+  color: #fff;
+  letter-spacing: 1px;
+  z-index: 20;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .global-copyright {
+    bottom: 20px;
+    right: 20px;
+    font-size: 10px;
+    opacity: 0.4;
+  }
+}
+
+@keyframes lyrics-fade {
+  0% { opacity: 0; transform: translateY(10px); filter: blur(5px); }
+  20% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  80% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  100% { opacity: 0; transform: translateY(-10px); filter: blur(5px); }
+}
+
+.animate-lyrics-fade {
+  animation: lyrics-fade 4s ease-in-out forwards;
+}
+
+@keyframes lyrics-pulse {
+  0%, 100% { 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes creditsScroll {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(calc(-100% + 100vh));
+  }
+}
+
+.music-player {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.1);
+  height: 44px;
+  transition: width 0.25s ease;
+  overflow: hidden;
+}
+
+.music-player.collapsed { width: 44px; }
+.music-player.expanded { width: 220px; }
+
+.music-player-btn {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  border: none;
+  background: transparent;
+  border-radius: 22px;
+  color: rgba(255,255,255,0.8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.music-player-progress {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  margin-right: 16px;
+  transition: opacity 0.2s ease;
+}
+
+.music-player-progress.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.music-player-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+}
+
+.music-player-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: rgba(255,255,255,0.6);
+  border-radius: 2px;
+}
+
+.music-player-bar-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.music-player-time {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  font-family: system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
