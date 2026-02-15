@@ -46,7 +46,7 @@ export function LetterContent() {
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
-  
+  // 谢谢你来过
   return (
     <>
     <GlowEffect active={showHearts} />

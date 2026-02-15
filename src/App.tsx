@@ -18,7 +18,7 @@ const EasterEggModal = lazy(() => import('./components/UI/EasterEggModal').then(
 const EasterEggDebug = lazy(() => import('./components/UI/EasterEggDebug').then(m => ({ default: m.EasterEggDebug })))
 const MissedEggPrompt = lazy(() => import('./components/UI/MissedEggPrompt').then(m => ({ default: m.MissedEggPrompt })))
 const NovelReader = lazy(() => import('./components/UI/NovelReader').then(m => ({ default: m.NovelReader })))
-
+// 如果今天是晴天，请你打开窗吧，让阳光洒进来，因为我们曾沐浴同一束光芒。
 function NovelReaderWrapper() {
   const showNovel = useAppStore(s => s.showNovel)
   const setShowNovel = useAppStore(s => s.setShowNovel)
